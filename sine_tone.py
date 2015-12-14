@@ -24,6 +24,15 @@ def sine_tone(frequency, duration, volume=1, sample_rate=22050):
     stream.close()
     p.terminate()
 
+
+def playScale(scale):
+    for x in scale:
+        print(x)
+        sine_tone(frequency = x,
+                  duration = 1,
+                  volume=.5,
+                  sample_rate = 50000)
+
 #test
 '''
 sine_tone(
@@ -34,9 +43,8 @@ sine_tone(
     # see http://en.wikipedia.org/wiki/Bit_rate#Audio
     sample_rate=22050 # number of samples per second
 )
+
 '''
-
-
 
 
 
@@ -52,4 +60,6 @@ cMaj = [1,1.5,2.5,3.5,4,5]
 for x in cMaj:
     new_note = a * (tr2sqrd ** x)
     freqList.append(int(round(new_note)))
-print(freqList)
+cMaj = freqList
+print(cMaj)
+playScale(cMaj)
