@@ -4,7 +4,7 @@ import math
 from pyaudio import PyAudio
 
 def sine_tone(frequency, duration, volume=1, sample_rate=22050):
-    n_samples = int(sample_rate * duration)
+    n_samples = int(round(sample_rate * duration))
     restframes = n_samples % sample_rate
 
     p = PyAudio()
@@ -14,6 +14,7 @@ def sine_tone(frequency, duration, volume=1, sample_rate=22050):
                     output=True)
     s = lambda t: volume * math.sin(2 * math.pi * frequency * t / sample_rate)
     samples = (int(s(t) * 0x7f + 0x80) for t in range(n_samples))
+    stream.write(bytes(bytearray(samples)))
     for buf in zip(*[samples]*sample_rate): # write several samples at a time
         stream.write(bytes(bytearray(buf)))
 
@@ -29,9 +30,9 @@ def playScale(scale):
     for x in scale:
         print(x)
         sine_tone(frequency = x,
-                  duration = 1,
+                  duration = 0.1,
                   volume=.5,
-                  sample_rate = 50000)
+                  sample_rate = 22050)
 
 #test
 '''
