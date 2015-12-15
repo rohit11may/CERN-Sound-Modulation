@@ -1,13 +1,14 @@
 """Play a fixed frequency sound."""
 from __future__ import division
 import math
-from pyaudio import PyAudio
+import pyaudio
 
 def sine_tone(frequency, duration, volume=1, sample_rate=22050):
+
     n_samples = int(round(sample_rate * duration))
     restframes = n_samples % sample_rate
 
-    p = PyAudio()
+    p = pyaudio.PyAudio()
     stream = p.open(format=p.get_format_from_width(1), # 8bit
                     channels=1, # mono
                     rate=sample_rate,
@@ -27,12 +28,48 @@ def sine_tone(frequency, duration, volume=1, sample_rate=22050):
 
 
 def playScale(scale):
-    for x in scale:
-        print(x)
-        sine_tone(frequency = x,
-                  duration = 0.1,
-                  volume=.5,
-                  sample_rate = 22050)
+    CHUNK = 1024 
+    FORMAT = pyaudio.paInt16 #paInt8
+    CHANNELS = 2 
+    RATE = 44100 #sample rate
+    RECORD_SECONDS = 17 
+    WAVE_OUTPUT_FILENAME = "output.wav"
+
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    frames_per_buffer=CHUNK) #buffer
+
+    print("* recording")
+
+    frames = []
+
+    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+        for x in scale:
+            print(x)
+            sine_tone(frequency = x,
+                      duration = 0.2,
+                      volume=.5,
+                      sample_rate = 44100)
+        data = stream.read(CHUNK)
+        frames.append(data) # 2 bytes(16 bits) per channel
+
+    print("* done recording")
+
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    wf.setnchannels(CHANNELS)
+    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setframerate(RATE)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+
 
 #test
 '''
