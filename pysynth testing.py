@@ -8,3 +8,5 @@ pysynth.make_wav(song1, fn = "test1.wav")
 pysynth.make_wav(song2, fn = "test2.wav")
 
 mix_files("test1.wav", "test2.wav", "test3.wav")
+
+#TESTING FOR TOSH
