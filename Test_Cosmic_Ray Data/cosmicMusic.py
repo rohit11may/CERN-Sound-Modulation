@@ -1,7 +1,7 @@
 from dataGenerate import getValues
 from pysynth_src.getScale import getScale
 
-scale = getScale('c4')
+scale = getScale('a#3')
 print(scale)
 noteNum, duration = getValues()
 
